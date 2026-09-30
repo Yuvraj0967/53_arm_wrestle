@@ -152,7 +152,7 @@ class GameEngine:
 
         pygame.draw.line(screen, (45, 18, 4), (self.width // 2, 100), (self.width // 2, 410), 4)
 
-        offset_x = (self.arm_position / self.target_limit) * 95
+        offset_x = max(-1.0, min(1.0, self.arm_position / self.target_limit)) * 155
         hand_x = (self.width // 2) + int(offset_x)
         hand_y = 235
 
@@ -194,6 +194,19 @@ class GameEngine:
             bar_color = (60, 210, 100) if self.stamina > 25 else (220, 60, 60)
             pygame.draw.rect(screen, bar_color, stamina_fill, border_radius=6)
 
+        # tug bar: left half = player win side, right half = computer win side
+        tug = pygame.Rect(40, 500, self.width - 80, 26)
+        pygame.draw.rect(screen, (45, 50, 60), tug, border_radius=8)
+        pygame.draw.rect(screen, (40, 90, 160), pygame.Rect(tug.x, tug.y, tug.w // 2, tug.h), border_top_left_radius=8, border_bottom_left_radius=8)
+        pygame.draw.rect(screen, (150, 55, 45), pygame.Rect(tug.centerx, tug.y, tug.w // 2, tug.h), border_top_right_radius=8, border_bottom_right_radius=8)
+        frac = max(-1.0, min(1.0, self.arm_position / self.target_limit))
+        marker_x = tug.centerx + int(frac * (tug.w // 2 - 4))
+        pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(marker_x - 4, tug.y - 4, 8, tug.h + 8), border_radius=3)
+        left_lbl = self.font_small.render("<< PLAYER WINS", True, (200, 220, 255))
+        right_lbl = self.font_small.render("COMPUTER WINS >>", True, (255, 210, 200))
+        screen.blit(left_lbl, (tug.x, tug.bottom + 6))
+        screen.blit(right_lbl, (tug.right - right_lbl.get_width(), tug.bottom + 6))
+
         if self.game_state == "GAME_OVER":
             overlay = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
             overlay.fill((0, 0, 0, 200))
@@ -206,6 +219,11 @@ class GameEngine:
                 text_surf,
                 (self.width // 2 - text_surf.get_width() // 2, self.height // 2 - 45)
             )
+
+            pos_surf = self.font_small.render(
+                f"Final position: {self.arm_position:+.0f}  (win at -100 = player, +100 = computer)",
+                True, (200, 200, 200))
+            screen.blit(pos_surf, (self.width // 2 - pos_surf.get_width() // 2, self.height // 2 + 45))
 
             restart_surf = self.font_med.render(
                 "Press [R] to Rematch", True, (240, 240, 240)

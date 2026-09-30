@@ -5,7 +5,7 @@ import pygame
 
 class GameEngine:
 
-    PRESS_COST = 4.0
+    PRESS_COST = 3.0
     STAMINA_REGEN = 0.1
     EXHAUST_THRESHOLD = 10.0
     EXHAUST_RECOVER = 30.0

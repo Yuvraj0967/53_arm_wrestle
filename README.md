@@ -1,4 +1,4 @@
-# Arm Wrestle Showdown Lab
+# Arm Wrestle Showdown Lab(by yuvraj pateria(pes1ug24cs547)
 
 This project is a tug-of-war button mashing game using **Pygame**. It introduces students to vector interpolation, resource/stamina management, alternating key-stroke detection, and simple AI pressure modeling inside an object-oriented codebase.
 
